@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Дарья Артемьева](https://up.htmlacademy.ru/univer-js2/6/user/2621293).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Лепешкин](https://htmlacademy.ru/profile/spearance).
 
 ---
 
