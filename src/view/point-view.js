@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-function createPointTemplate(point, destination, offers) {
+function createPointTemplate(point, destination) {
   const { basePrice, type, isFavorite } = point;
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
@@ -32,14 +32,13 @@ function createPointTemplate(point, destination, offers) {
 }
 
 export default class PointView {
-  constructor({point, destination, offers}) {
+  constructor({point, destination}) {
     this.point = point;
     this.destination = destination;
-    this.offers = offers;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point, this.destination, this.offers);
+    return createPointTemplate(this.point, this.destination);
   }
 
   getElement() {

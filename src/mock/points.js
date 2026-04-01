@@ -1,5 +1,5 @@
 import { getRandomArrayElement } from '../utils.js';
-import { TYPES, DESCRIPTIONS, CITIES } from '../const.js';
+import { TYPES, DESCRIPTIONS } from '../const.js';
 
 const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 

@@ -10,14 +10,6 @@ const TYPES = [
   'restaurant'
 ];
 
-const DESCRIPTIONS = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus viverra. Nullam nunc ex, convallis sed finibus eget.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
-];
-
 const CITIES = [
   'Chamonix',
   'Geneva',
@@ -26,6 +18,15 @@ const CITIES = [
   'Oslo',
   'Kopehagen'
 ];
+
+const DESCRIPTIONS = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Cras aliquet varius magna, non porta ligula feugiat eget.',
+  'Fusce tristique felis at fermentum pharetra.',
+  'Aliquam id orci ut lectus viverra. Nullam nunc ex, convallis sed finibus eget.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
+];
+
 
 const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';

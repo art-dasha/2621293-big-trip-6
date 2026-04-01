@@ -37,8 +37,8 @@ function createEditPointTemplate(point, destination, allOffers) {
   const { name, description, pictures } = destination;
 
   const eventTypesTemplate = TYPES.map((eventType) => createEventTypeItemTemplate(eventType, type)).join('');
-  
-  const offersTemplate = allOffers.length > 0 
+
+  const offersTemplate = allOffers.length > 0
     ? `<section class="event__section event__section--offers">
         <h3 class="event__section-title event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
@@ -119,7 +119,7 @@ export default class EditPointView {
   constructor({ point, destination, offers }) {
     this.point = point;
     this.destination = destination;
-    this.offers = offers; 
+    this.offers = offers;
   }
 
   getTemplate() {

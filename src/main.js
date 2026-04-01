@@ -4,9 +4,9 @@ import TripInfoView from './view/trip-info-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/points-model.js';
 
-const siteHeaderElement = document.querySelector('.trip-main'); 
-const siteFiltersElement = document.querySelector('.trip-controls__filters'); 
-const siteMainElement = document.querySelector('.trip-events'); 
+const siteHeaderElement = document.querySelector('.trip-main');
+const siteFiltersElement = document.querySelector('.trip-controls__filters');
+const siteMainElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel();
 
