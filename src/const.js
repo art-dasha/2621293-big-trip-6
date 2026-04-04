@@ -27,9 +27,15 @@ const DESCRIPTIONS = [
   'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
 ];
 
-
 const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';
 const FULL_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
-export { TYPES, DESCRIPTIONS, CITIES, DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT };
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
+export { TYPES, DESCRIPTIONS, CITIES, DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, FilterType };

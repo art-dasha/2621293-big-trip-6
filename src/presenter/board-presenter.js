@@ -3,11 +3,16 @@ import EventListView from '../view/event-list-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import NoPointsView from '../view/no-points-view.js';
+import SortView from '../view/sort-view.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+
   #eventListComponent = new EventListView();
+  #sortComponent = new SortView();
+  #noPointsComponent = new NoPointsView();
+
   #boardPoints = [];
 
   constructor({boardContainer, pointsModel}) {
@@ -68,11 +73,13 @@ export default class BoardPresenter {
 
   #renderBoard() {
     if (this.#boardPoints.length === 0) {
-      render(new NoPointsView(), this.#boardContainer);
+      render(this.#noPointsComponent, this.#boardContainer);
       return;
     }
 
+    render(this.#sortComponent, this.#boardContainer);
     render(this.#eventListComponent, this.#boardContainer);
+
     this.#boardPoints.forEach((point) => this.#renderPoint(point));
   }
 }

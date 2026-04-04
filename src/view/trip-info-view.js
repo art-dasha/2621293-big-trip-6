@@ -1,13 +1,12 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createTripInfoTemplate() {
   return (
-    `<section class="trip-main__trip-info trip-info">
+    `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
-        <p class="trip-info__dates">18&nbsp;&mdash;&nbsp;20 Mar</p>
+        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
       </div>
-
       <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
       </p>
@@ -15,24 +14,8 @@ function createTripInfoTemplate() {
   );
 }
 
-export default class TripInfoView {
-  // В будущем сюда можно будет передать массив всех точек для расчета цены
-  constructor() {
-    this.element = null;
-  }
-
-  getTemplate() {
+export default class TripInfoView extends AbstractView {
+  get template() {
     return createTripInfoTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
