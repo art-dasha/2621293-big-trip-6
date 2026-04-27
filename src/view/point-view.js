@@ -26,7 +26,6 @@ function createPointTemplate(point, destination) {
             <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
           </svg>
         </button>
-        {/* ВОТ ЭТА КНОПКА БЫЛА ПРОПУЩЕНА: */}
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -39,15 +38,20 @@ export default class PointView extends AbstractView {
   #point = null;
   #destination = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;  // ← перенесли сюда
 
-  constructor({point, destination, onEditClick}) {
+  constructor({point, destination, onEditClick, onFavoriteClick}) {  // ← добавили onFavoriteClick
     super();
     this.#point = point;
     this.#destination = destination;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;  // теперь работает
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -57,5 +61,10 @@ export default class PointView extends AbstractView {
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
