@@ -1,20 +1,21 @@
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import EventListView from '../view/event-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
+import { SortType } from '../const.js';
+import { sortPoints } from '../utils.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
 
   #eventListComponent = new EventListView();
-  #sortComponent = new SortView();
   #noPointsComponent = new NoPointsView();
+  #sortComponent = null;
 
   #boardPoints = [];
-
-  // Хранилище презентеров: id точки -> экземпляр PointPresenter
+  #currentSortType = SortType.DAY;
   #pointPresenters = new Map();
 
   constructor({ boardContainer, pointsModel }) {
@@ -25,6 +26,14 @@ export default class BoardPresenter {
   init() {
     this.#boardPoints = [...this.#pointsModel.points];
     this.#renderBoard();
+  }
+
+  #renderSort() {
+    this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange,
+    });
+    render(this.#sortComponent, this.#boardContainer);
   }
 
   #renderPoint(point) {
@@ -41,29 +50,35 @@ export default class BoardPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
+  #renderPointList() {
+    const sorted = sortPoints(this.#boardPoints, this.#currentSortType);
+    sorted.forEach((point) => this.#renderPoint(point));
+  }
+
   #renderBoard() {
     if (this.#boardPoints.length === 0) {
       render(this.#noPointsComponent, this.#boardContainer);
       return;
     }
 
-    render(this.#sortComponent, this.#boardContainer);
+    this.#renderSort();
     render(this.#eventListComponent, this.#boardContainer);
-
-    this.#boardPoints.forEach((point) => this.#renderPoint(point));
+    this.#renderPointList();
   }
 
-  // Сбрасывает ВСЕ точки в режим просмотра
   #resetAllViews() {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
-  // Вызывается из PointPresenter когда открывается форма редактирования
   #handleModeChange = () => {
     this.#resetAllViews();
   };
 
-  // Обновляет данные точки и перерисовывает её
   #handleDataChange = (updatedPoint) => {
     this.#boardPoints = this.#boardPoints.map((point) =>
       point.id === updatedPoint.id ? updatedPoint : point
@@ -71,7 +86,17 @@ export default class BoardPresenter {
 
     const destination = this.#pointsModel.getDestinationById(updatedPoint.destination);
     const offers = this.#pointsModel.getOffersByType(updatedPoint.type);
-
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, destination, offers);
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    // Проверка: не перерисовывать если сортировка не изменилась
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#clearPointList();
+    this.#renderPointList();
   };
 }

@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 
@@ -69,6 +69,12 @@ export default class PointPresenter {
       this.#replaceFormToCard();
     }
   }
+
+
+destroy() {
+  remove(this.#pointComponent);
+  remove(this.#pointEditComponent);
+}
 
   #replaceCardToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
