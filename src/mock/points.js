@@ -68,8 +68,4 @@ const mockPoints = [
   }
 ];
 
-function getRandomPoint() {
-  return getRandomArrayElement(mockPoints);
-}
-
-export { getRandomPoint, mockDestinations, mockOffers };
+export { mockPoints, mockDestinations, mockOffers };

@@ -38,4 +38,10 @@ const FilterType = {
   PAST: 'past',
 };
 
-export { TYPES, DESCRIPTIONS, CITIES, DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, FilterType };
+const SortType = {
+  DAY: 'sort-day',
+  TIME: 'sort-time',
+  PRICE: 'sort-price',
+};
+
+export { TYPES, DESCRIPTIONS, CITIES, DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, FilterType, SortType };
