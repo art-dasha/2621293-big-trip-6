@@ -1,6 +1,11 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { capitalizeFirstLetter } from '../utils.js';
-import { TYPES } from '../const.js';
+import { capitalizeFirstLetter, formatTime } from '../utils.js';
+import { TYPES, FULL_DATE_FORMAT } from '../const.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
+
+const formatDateForInput = (date) => dayjs(date).format(FULL_DATE_FORMAT);
 
 const createEventTypeItemTemplate = (type, currentType) => {
   const capitalizedType = capitalizeFirstLetter(type);
@@ -51,7 +56,7 @@ const createDestinationSection = (destination) => {
 };
 
 function createEditPointTemplate(state, destination, offers) {
-  const { type, offers: selectedOffersIds } = state;
+  const { type, offers: selectedOffersIds, dateFrom, dateTo } = state;
   const destinationName = destination?.name ?? '';
 
   return (
@@ -73,6 +78,13 @@ function createEditPointTemplate(state, destination, offers) {
             <label class="event__label event__type-output" for="event-destination-1">${type}</label>
             <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
           </div>
+          <div class="event__field-group event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-1">From</label>
+            <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? formatDateForInput(dateFrom) : ''}">
+            &mdash;
+            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? formatDateForInput(dateTo) : ''}">
+          </div>
           <button class="event__save-btn btn btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
           <button class="event__rollup-btn" type="button">
@@ -93,6 +105,8 @@ export default class EditPointView extends AbstractStatefulView {
   #allDestinations = null;
   #handleFormSubmit = null;
   #handleCloseClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ point, destination, offers, allOffers, allDestinations, onFormSubmit, onCloseClick }) {
     super();
@@ -111,6 +125,11 @@ export default class EditPointView extends AbstractStatefulView {
     return createEditPointTemplate(this._state, currentDestination, currentOffers);
   }
 
+  updateElement(update) {
+    this.#destroyDatepickers();
+    super.updateElement(update);
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
@@ -120,6 +139,8 @@ export default class EditPointView extends AbstractStatefulView {
       .addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
+
+    this.#setDatepickers();
   }
 
   #getOffersByType(type) {
@@ -130,11 +151,46 @@ export default class EditPointView extends AbstractStatefulView {
     return this.#allDestinations.find((d) => d.id === id);
   }
 
+  #setDatepickers() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: ([userDate]) => {
+          this._setState({ dateFrom: userDate.toISOString() });
+          this.#datepickerTo.set('minDate', userDate);
+        },
+      }
+    );
+
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: ([userDate]) => {
+          this._setState({ dateTo: userDate.toISOString() });
+        },
+      }
+    );
+  }
+
+  #destroyDatepickers() {
+    this.#datepickerFrom?.destroy();
+    this.#datepickerTo?.destroy();
+    this.#datepickerFrom = null;
+    this.#datepickerTo = null;
+  }
+
   #typeChangeHandler = (evt) => {
     const newType = evt.target.value;
     this.updateElement({
       type: newType,
-      offers: [], 
+      offers: [],
     });
   };
 

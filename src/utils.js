@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
-import { SortType } from './const.js';
+import duration from 'dayjs/plugin/duration';
+import { SortType, DATE_FORMAT, TIME_FORMAT } from './const.js';
+
+dayjs.extend(duration);
 
 const capitalizeFirstLetter = (string) => {
   if (!string) {
@@ -16,6 +19,24 @@ const isPointPresent = (dateFrom, dateTo) => {
   return now.isAfter(dayjs(dateFrom).subtract(1, 'day')) && now.isBefore(dayjs(dateTo).add(1, 'day'));
 };
 const isPointPast = (dateTo) => dateTo && dayjs().isAfter(dayjs(dateTo), 'D');
+
+const formatDate = (date) => dayjs(date).format(DATE_FORMAT);
+const formatTime = (date) => dayjs(date).format(TIME_FORMAT);
+
+const formatDuration = (dateFrom, dateTo) => {
+  const diff = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
+  const days = Math.floor(diff.asDays());
+  const hours = diff.hours();
+  const minutes = diff.minutes();
+
+  if (days > 0) {
+    return `${String(days).padStart(2, '0')}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
+  }
+  if (hours > 0) {
+    return `${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
+  }
+  return `${String(minutes).padStart(2, '0')}M`;
+};
 
 const sortByDay = (pointA, pointB) =>
   dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
@@ -40,11 +61,14 @@ const sortPoints = (points, sortType) => {
   return points;
 };
 
-export { 
-  getRandomArrayElement, 
-  capitalizeFirstLetter, 
-  isPointFuture, 
-  isPointPresent, 
+export {
+  getRandomArrayElement,
+  capitalizeFirstLetter,
+  isPointFuture,
+  isPointPresent,
   isPointPast,
   sortPoints,
+  formatDate,
+  formatTime,
+  formatDuration,
 };

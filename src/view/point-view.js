@@ -1,22 +1,25 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { formatDate, formatTime, formatDuration } from '../utils.js';
 
 function createPointTemplate(point, destination) {
-  const { basePrice, type, isFavorite } = point;
+  const { basePrice, type, isFavorite, dateFrom, dateTo } = point;
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
   return (
     `<li class="trip-events__item">
       <div class="event">
+        <time class="event__date" datetime="${dateFrom}">${formatDate(dateFrom)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${dateFrom}">${formatTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${dateTo}">${formatTime(dateTo)}</time>
           </p>
+          <p class="event__duration">${formatDuration(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
@@ -38,18 +41,17 @@ export default class PointView extends AbstractView {
   #point = null;
   #destination = null;
   #handleEditClick = null;
-  #handleFavoriteClick = null;  // ← перенесли сюда
+  #handleFavoriteClick = null;
 
-  constructor({point, destination, onEditClick, onFavoriteClick}) {  // ← добавили onFavoriteClick
+  constructor({point, destination, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#destination = destination;
     this.#handleEditClick = onEditClick;
-    this.#handleFavoriteClick = onFavoriteClick;  // теперь работает
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
-
     this.element.querySelector('.event__favorite-btn')
       .addEventListener('click', this.#favoriteClickHandler);
   }
