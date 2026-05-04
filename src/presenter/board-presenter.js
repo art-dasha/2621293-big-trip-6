@@ -37,18 +37,24 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point) {
-    const destination = this.#pointsModel.getDestinationById(point.destination);
-    const offers = this.#pointsModel.getOffersByType(point.type);
+  const destination = this.#pointsModel.getDestinationById(point.destination);
+  const offers = this.#pointsModel.getOffersByType(point.type);
 
-    const pointPresenter = new PointPresenter({
-      pointListContainer: this.#eventListComponent.element,
-      onDataChange: this.#handleDataChange,
-      onModeChange: this.#handleModeChange,
-    });
+  const pointPresenter = new PointPresenter({
+    pointListContainer: this.#eventListComponent.element,
+    onDataChange: this.#handleDataChange,
+    onModeChange: this.#handleModeChange,
+  });
 
-    pointPresenter.init(point, destination, offers);
-    this.#pointPresenters.set(point.id, pointPresenter);
-  }
+  pointPresenter.init(
+    point,
+    destination,
+    offers,
+    this.#pointsModel.offers,       // allOffers
+    this.#pointsModel.destinations, // allDestinations
+  );
+  this.#pointPresenters.set(point.id, pointPresenter);
+}
 
   #clearPointList() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
@@ -80,17 +86,21 @@ export default class BoardPresenter {
   };
 
   #handleDataChange = (updatedPoint) => {
-    this.#boardPoints = this.#boardPoints.map((point) =>
-      point.id === updatedPoint.id ? updatedPoint : point
-    );
+  this.#boardPoints = this.#boardPoints.map((point) =>
+    point.id === updatedPoint.id ? updatedPoint : point
+  );
 
-    const destination = this.#pointsModel.getDestinationById(updatedPoint.destination);
-    const offers = this.#pointsModel.getOffersByType(updatedPoint.type);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, destination, offers);
-  };
-
+  const destination = this.#pointsModel.getDestinationById(updatedPoint.destination);
+  const offers = this.#pointsModel.getOffersByType(updatedPoint.type);
+  this.#pointPresenters.get(updatedPoint.id).init(
+    updatedPoint,
+    destination,
+    offers,
+    this.#pointsModel.offers,
+    this.#pointsModel.destinations,
+  );
+};
   #handleSortTypeChange = (sortType) => {
-    // Проверка: не перерисовывать если сортировка не изменилась
     if (this.#currentSortType === sortType) {
       return;
     }

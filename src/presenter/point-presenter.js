@@ -18,6 +18,8 @@ export default class PointPresenter {
   #point = null;
   #destination = null;
   #offers = null;
+  #allOffers = null;
+  #allDestinations = null;
   #mode = Mode.DEFAULT;
 
   constructor({ pointListContainer, onDataChange, onModeChange }) {
@@ -26,10 +28,12 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, destination, offers) {
+  init(point, destination, offers, allOffers, allDestinations) {
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
@@ -45,17 +49,17 @@ export default class PointPresenter {
       point: this.#point,
       destination: this.#destination,
       offers: this.#offers,
+      allOffers: this.#allOffers,
+      allDestinations: this.#allDestinations,
       onFormSubmit: this.#handleFormSubmit,
       onCloseClick: this.#handleCloseClick,
     });
 
-    // Первый рендер
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
       return;
     }
 
-    // Перерисовка при обновлении данных
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
@@ -70,16 +74,15 @@ export default class PointPresenter {
     }
   }
 
-
-destroy() {
-  remove(this.#pointComponent);
-  remove(this.#pointEditComponent);
-}
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
+  }
 
   #replaceCardToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange(); // сообщаем BoardPresenter — сброси остальных
+    this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
