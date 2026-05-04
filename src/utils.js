@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { SortType, DATE_FORMAT, TIME_FORMAT } from './const.js';
+import { SortType, DATE_FORMAT, TIME_FORMAT, FilterType } from './const.js';
 
 dayjs.extend(duration);
 
@@ -61,6 +61,13 @@ const sortPoints = (points, sortType) => {
   return points;
 };
 
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point.dateFrom)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point.dateFrom, point.dateTo)),
+  [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point.dateTo)),
+};
+
 export {
   getRandomArrayElement,
   capitalizeFirstLetter,
@@ -71,4 +78,5 @@ export {
   formatDate,
   formatTime,
   formatDuration,
+  filter,
 };
