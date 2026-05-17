@@ -66,13 +66,22 @@ export default class NewPointPresenter {
     this.#handleDestroy();
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({ isSaving: true });
+  }
+
+  setAborting() {
+    this.#pointEditComponent.shake(() => {
+      this.#pointEditComponent.updateElement({ isSaving: false });
+    });
+  }
+
   #handleFormSubmit = () => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       this.#pointEditComponent.getState(),
     );
-    this.destroy();
   };
 
   #handleCloseClick = () => {
