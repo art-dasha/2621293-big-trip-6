@@ -3,9 +3,9 @@ import EditPointView from '../view/edit-point-view.js';
 import { UserAction, UpdateType } from '../const.js';
 
 const BLANK_POINT = {
-  basePrice: 0,
+  basePrice: 1,
   dateFrom: new Date().toISOString(),
-  dateTo: new Date().toISOString(),
+  dateTo: new Date(Date.now() + 60 * 60 * 1000).toISOString(), 
   destination: null,
   isFavorite: false,
   offers: [],

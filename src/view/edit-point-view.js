@@ -241,9 +241,15 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit();
-  };
+  evt.preventDefault();
+  if (this._state.basePrice < 1) {
+    this.element.querySelector('.event__input--price').setCustomValidity('Price must be at least 1');
+    this.element.querySelector('.event__input--price').reportValidity();
+    return;
+  }
+  this.element.querySelector('.event__input--price').setCustomValidity('');
+  this.#handleFormSubmit();
+};
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();

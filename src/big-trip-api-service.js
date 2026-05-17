@@ -37,7 +37,7 @@ export default class BigTripApiService extends ApiService {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
-      body: JSON.stringify(this.#adaptToServer(point)),
+      body: JSON.stringify(this.#adaptToServerNew(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
     return ApiService.parseResponse(response);
@@ -53,6 +53,18 @@ export default class BigTripApiService extends ApiService {
   #adaptToServer(point) {
     return {
       'id': point.id,
+      'base_price': point.basePrice,
+      'date_from': point.dateFrom,
+      'date_to': point.dateTo,
+      'destination': point.destination,
+      'is_favorite': point.isFavorite,
+      'offers': point.offers,
+      'type': point.type,
+    };
+  }
+
+  #adaptToServerNew(point) {
+    return {
       'base_price': point.basePrice,
       'date_from': point.dateFrom,
       'date_to': point.dateTo,

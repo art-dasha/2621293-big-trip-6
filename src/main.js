@@ -1,7 +1,7 @@
 import { render, RenderPosition } from './framework/render.js';
-import TripInfoView from './view/trip-info-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import BigTripApiService from './big-trip-api-service.js';
@@ -18,6 +18,11 @@ const apiService = new BigTripApiService(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel({ apiService });
 const filterModel = new FilterModel();
 
+const tripInfoPresenter = new TripInfoPresenter({
+  tripInfoContainer: siteHeaderElement,
+  pointsModel,
+});
+
 const boardPresenter = new BoardPresenter({
   boardContainer: siteMainElement,
   pointsModel,
@@ -33,10 +38,9 @@ const filterPresenter = new FilterPresenter({
   pointsModel,
 });
 
-render(new TripInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
-
 filterPresenter.init();
 boardPresenter.init();
+tripInfoPresenter.init();
 pointsModel.init();
 
 newEventButtonElement.addEventListener('click', () => {
