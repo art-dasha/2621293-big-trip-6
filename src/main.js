@@ -4,13 +4,18 @@ import BoardPresenter from './presenter/board-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+import BigTripApiService from './big-trip-api-service.js';
+
+const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
+const AUTHORIZATION = 'Basic hS2sfS44wcl1sa2j';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteFiltersElement = document.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.trip-events');
 const newEventButtonElement = document.querySelector('.trip-main__event-add-btn');
 
-const pointsModel = new PointsModel();
+const apiService = new BigTripApiService(END_POINT, AUTHORIZATION);
+const pointsModel = new PointsModel({ apiService });
 const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter({
@@ -32,6 +37,7 @@ render(new TripInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
 
 filterPresenter.init();
 boardPresenter.init();
+pointsModel.init();
 
 newEventButtonElement.addEventListener('click', () => {
   boardPresenter.createPoint();
