@@ -164,18 +164,34 @@ export default class BoardPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
-    switch (actionType) {
-      case UserAction.UPDATE_POINT:
+  switch (actionType) {
+    case UserAction.UPDATE_POINT:
+      this.#pointPresenters.get(update.id)?.setSaving();
+      try {
         await this.#pointsModel.updatePoint(updateType, update);
-        break;
-      case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
-        break;
-      case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
-        break;
-    }
-  };
+      } catch (err) {
+        this.#pointPresenters.get(update.id)?.setAborting();
+      }
+      break;
+    case UserAction.ADD_POINT:
+      this.#newPointPresenter.setSaving();
+      try {
+        await this.#pointsModel.addPoint(updateType, update);
+        this.#newPointPresenter.destroy();
+      } catch (err) {
+        this.#newPointPresenter.setAborting();
+      }
+      break;
+    case UserAction.DELETE_POINT:
+      this.#pointPresenters.get(update.id)?.setDeleting();
+      try {
+        await this.#pointsModel.deletePoint(updateType, update);
+      } catch (err) {
+        this.#pointPresenters.get(update.id)?.setAborting();
+      }
+      break;
+  }
+};
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {

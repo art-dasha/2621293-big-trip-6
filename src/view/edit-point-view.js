@@ -62,7 +62,7 @@ const createDestinationDatalist = (destinations) => `
 `;
 
 function createEditPointTemplate(state, destination, offers, destinations) {
-  const { type, offers: selectedOffersIds, dateFrom, dateTo, basePrice } = state;
+  const { type, offers: selectedOffersIds, dateFrom, dateTo, basePrice, isSaving, isDeleting } = state;
   const destinationName = destination?.name ?? '';
 
   return (
@@ -73,7 +73,7 @@ function createEditPointTemplate(state, destination, offers, destinations) {
             <label class="event__type event__type-btn" for="event-type-toggle-1">
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox" ${isSaving || isDeleting ? 'disabled' : ''}>
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 ${TYPES.map((t) => createEventTypeItemTemplate(t, type)).join('')}
@@ -82,26 +82,26 @@ function createEditPointTemplate(state, destination, offers, destinations) {
           </div>
           <div class="event__field-group event__field-group--destination">
             <label class="event__label event__type-output" for="event-destination-1">${type}</label>
-            <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
+            <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1" ${isSaving || isDeleting ? 'disabled' : ''}>
             ${createDestinationDatalist(destinations)}
           </div>
           <div class="event__field-group event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? formatDateForInput(dateFrom) : ''}">
+            <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? formatDateForInput(dateFrom) : ''}" ${isSaving || isDeleting ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? formatDateForInput(dateTo) : ''}">
+            <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? formatDateForInput(dateTo) : ''}" ${isSaving || isDeleting ? 'disabled' : ''}>
           </div>
           <div class="event__field-group event__field-group--price">
             <label class="event__label" for="event-price-1">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input event__input--price" id="event-price-1" type="number" min="0" name="event-price" value="${basePrice}">
+            <input class="event__input event__input--price" id="event-price-1" type="number" min="0" name="event-price" value="${basePrice}" ${isSaving || isDeleting ? 'disabled' : ''}>
           </div>
-          <button class="event__save-btn btn btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
+          <button class="event__save-btn btn btn--blue" type="submit" ${isSaving || isDeleting ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isSaving || isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+          <button class="event__rollup-btn" type="button" ${isSaving || isDeleting ? 'disabled' : ''}>
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
@@ -125,7 +125,11 @@ export default class EditPointView extends AbstractStatefulView {
 
   constructor({ point, destination, offers, allOffers, allDestinations, onFormSubmit, onDeleteClick, onCloseClick }) {
     super();
-    this._state = structuredClone(point);
+    this._state = {
+    ...structuredClone(point),
+    isSaving: false,
+    isDeleting: false,
+    };
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
     this.#handleFormSubmit = onFormSubmit;
@@ -142,8 +146,11 @@ export default class EditPointView extends AbstractStatefulView {
   }
 
   getState() {
-    return structuredClone(this._state);
-  }
+  const state = structuredClone(this._state);
+  delete state.isSaving;
+  delete state.isDeleting;
+  return state;
+}
 
   updateElement(update) {
     this.#destroyDatepickers();
