@@ -1,7 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate } from '../utils.js';
-
-const MAX_CITIES_TO_SHOW = 3;
+import { MAX_CITIES_TO_SHOW } from '../const.js';
 
 function createRouteTitle(points, destinations) {
   const cities = points.map((point) => {

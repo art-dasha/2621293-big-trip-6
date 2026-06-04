@@ -3,9 +3,9 @@ import EditPointView from '../view/edit-point-view.js';
 import { UserAction, UpdateType } from '../const.js';
 
 const BLANK_POINT = {
-  basePrice: 1,
-  dateFrom: new Date().toISOString(),
-  dateTo: new Date(Date.now() + 60 * 60 * 1000).toISOString(), 
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
   destination: null,
   isFavorite: false,
   offers: [],
@@ -34,16 +34,14 @@ export default class NewPointPresenter {
       return;
     }
 
-    const firstDestination = allDestinations[0] ?? null;
     const point = {
       ...BLANK_POINT,
-      id: crypto.randomUUID(),
-      destination: firstDestination?.id ?? null,
+      destination: null,
     };
 
     this.#pointEditComponent = new EditPointView({
       point,
-      destination: firstDestination,
+      destination: null,
       offers: [],
       allOffers,
       allDestinations,
@@ -71,9 +69,11 @@ export default class NewPointPresenter {
   }
 
   setAborting() {
-    this.#pointEditComponent.shake(() => {
-      this.#pointEditComponent.updateElement({ isSaving: false });
-    });
+    if (this.#pointEditComponent === null) {
+      return;
+    }
+    this.#pointEditComponent.updateElement({ isSaving: false });
+    this.#pointEditComponent.shake();
   }
 
   #handleFormSubmit = () => {

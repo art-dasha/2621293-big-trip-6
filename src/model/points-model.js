@@ -31,18 +31,18 @@ export default class PointsModel extends Observable {
         this.#apiService.destinations,
         this.#apiService.offers,
       ]);
-
       this.#destinations = destinations;
       this.#offers = offers;
       this.#points = points.map(this.#adaptToClient);
+      this._notify(UpdateType.INIT, { hasError: false });
     } catch (err) {
       this.#points = [];
       this.#destinations = [];
       this.#offers = [];
+      this._notify(UpdateType.INIT, { hasError: true });
     }
-
-    this._notify(UpdateType.INIT);
   }
+
 
   async updatePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);

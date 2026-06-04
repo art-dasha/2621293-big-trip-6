@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { SortType, DATE_FORMAT, TIME_FORMAT, FilterType } from './const.js';
+import { SortType, DATE_FORMAT, EVENT_DATE_FORMAT, TIME_FORMAT, FilterType } from './const.js';
 
 dayjs.extend(duration);
 
@@ -11,8 +11,6 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
-
 const isPointFuture = (dateFrom) => dateFrom && dayjs().isBefore(dayjs(dateFrom), 'D');
 const isPointPresent = (dateFrom, dateTo) => {
   const now = dayjs();
@@ -21,6 +19,7 @@ const isPointPresent = (dateFrom, dateTo) => {
 const isPointPast = (dateTo) => dateTo && dayjs().isAfter(dayjs(dateTo), 'D');
 
 const formatDate = (date) => dayjs(date).format(DATE_FORMAT);
+const formatEventDate = (date) => dayjs(date).format(EVENT_DATE_FORMAT);
 const formatTime = (date) => dayjs(date).format(TIME_FORMAT);
 
 const formatDuration = (dateFrom, dateTo) => {
@@ -68,24 +67,19 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point.dateTo)),
 };
 
-const generateFilter = (points) => Object.entries({
-  [FilterType.EVERYTHING]: (pts) => pts,
-  [FilterType.FUTURE]: (pts) => pts.filter((point) => isPointFuture(point.dateFrom)),
-  [FilterType.PRESENT]: (pts) => pts.filter((point) => isPointPresent(point.dateFrom, point.dateTo)),
-  [FilterType.PAST]: (pts) => pts.filter((point) => isPointPast(point.dateTo)),
-}).map(([filterType, filterPoints]) => ({
+const generateFilter = (points) => Object.entries(filter).map(([filterType, filterFn]) => ({
   type: filterType,
-  count: filterPoints(points).length,
+  count: filterFn(points).length,
 }));
 
 export {
-  getRandomArrayElement,
   capitalizeFirstLetter,
   isPointFuture,
   isPointPresent,
   isPointPast,
   sortPoints,
   formatDate,
+  formatEventDate,
   formatTime,
   formatDuration,
   generateFilter,

@@ -10,26 +10,17 @@ const TYPES = [
   'restaurant'
 ];
 
-const CITIES = [
-  'Chamonix',
-  'Geneva',
-  'Amsterdam',
-  'Helsinki',
-  'Oslo',
-  'Kopehagen'
-];
-
-const DESCRIPTIONS = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus viverra. Nullam nunc ex, convallis sed finibus eget.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
-];
-
-const DATE_FORMAT = 'MMM DD';
+const DATE_FORMAT = 'DD MMM';
+const EVENT_DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';
 const FULL_DATE_FORMAT = 'DD/MM/YY HH:mm';
+const MAX_CITIES_TO_SHOW = 3;
+const FLATPICKR_DATE_FORMAT = 'd/m/y H:i';
+
+const UiBlockerTimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -57,4 +48,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { TYPES, DESCRIPTIONS, CITIES, DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, FilterType, SortType, UserAction, UpdateType };
+export { TYPES, DATE_FORMAT, EVENT_DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, MAX_CITIES_TO_SHOW, UiBlockerTimeLimit, FLATPICKR_DATE_FORMAT, FilterType, SortType, UserAction, UpdateType };

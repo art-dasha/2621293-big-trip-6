@@ -42,6 +42,7 @@ export default class PointPresenter {
     this.#pointComponent = new PointView({
       point: this.#point,
       destination: this.#destination,
+      offers: this.#offers.filter((offer) => this.#point.offers.includes(offer.id)),
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
@@ -98,22 +99,24 @@ export default class PointPresenter {
       this.#pointComponent.shake();
       return;
     }
-    this.#pointEditComponent.shake(() => {
-      this.#pointEditComponent.updateElement({
-        isSaving: false,
-        isDeleting: false,
-      });
+    this.#pointEditComponent.updateElement({
+      isSaving: false,
+      isDeleting: false,
     });
+    this.#pointEditComponent.shake();
   }
 
   #replaceCardToForm() {
+    if (this.#handleModeChange() === false) {
+      return;
+    }
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceFormToCard() {
+    this.#pointEditComponent.reset(this.#point);
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
