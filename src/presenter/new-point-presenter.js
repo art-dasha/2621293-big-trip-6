@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, Key } from '../const.js';
 
 const BLANK_POINT = {
   basePrice: 0,
@@ -34,15 +34,10 @@ export default class NewPointPresenter {
       return;
     }
 
-    const point = {
-      ...BLANK_POINT,
-      destination: null,
-    };
+    const point = { ...BLANK_POINT };
 
     this.#pointEditComponent = new EditPointView({
       point,
-      destination: null,
-      offers: [],
       allOffers,
       allDestinations,
       onFormSubmit: this.#handleFormSubmit,
@@ -89,7 +84,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === Key.ESCAPE || evt.key === Key.ESC) {
       evt.preventDefault();
       this.destroy();
     }

@@ -1,11 +1,12 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate } from '../utils.js';
 import { MAX_CITIES_TO_SHOW } from '../const.js';
+import he from 'he';
 
 function createRouteTitle(points, destinations) {
   const cities = points.map((point) => {
-    const destination = destinations.find((d) => d.id === point.destination);
-    return destination?.name ?? '';
+    const foundDestination = destinations.find((destination) => destination.id === point.destination);
+    return foundDestination?.name ? he.encode(foundDestination.name) : '';
   });
 
   if (cities.length <= MAX_CITIES_TO_SHOW) {
@@ -26,9 +27,9 @@ function createTripDates(points) {
 
 function createTripCost(points, offers) {
   return points.reduce((total, point) => {
-    const pointOffers = offers.find((o) => o.type === point.type)?.offers ?? [];
+    const pointOffers = offers.find((offerGroup) => offerGroup.type === point.type)?.offers ?? [];
     const selectedOffersPrice = point.offers.reduce((sum, offerId) => {
-      const offer = pointOffers.find((o) => o.id === offerId);
+      const offer = pointOffers.find((offerItem) => offerItem.id === offerId);
       return sum + (offer?.price ?? 0);
     }, 0);
     return total + point.basePrice + selectedOffersPrice;

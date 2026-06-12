@@ -99,7 +99,7 @@ export default class PointsModel extends Observable {
   }
 
   getOffersByType(type) {
-    return this.#offers.find((offer) => offer.type === type)?.offers || [];
+    return this.#offers.find((offer) => offer.type === type)?.offers ?? [];
   }
 
   #adaptToClient(point) {

@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, Key } from '../const.js';
 
 const Mode = {
   DEFAULT: 'default',
@@ -49,8 +49,6 @@ export default class PointPresenter {
 
     this.#pointEditComponent = new EditPointView({
       point: this.#point,
-      destination: this.#destination,
-      offers: this.#offers,
       allOffers: this.#allOffers,
       allDestinations: this.#allDestinations,
       onFormSubmit: this.#handleFormSubmit,
@@ -123,7 +121,7 @@ export default class PointPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === Key.ESCAPE || evt.key === Key.ESC) {
       evt.preventDefault();
       this.#replaceFormToCard();
     }

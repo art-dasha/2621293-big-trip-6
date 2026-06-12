@@ -48,4 +48,10 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { TYPES, DATE_FORMAT, EVENT_DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, MAX_CITIES_TO_SHOW, UiBlockerTimeLimit, FLATPICKR_DATE_FORMAT, FilterType, SortType, UserAction, UpdateType };
+const Key = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+  ENTER: 'Enter',
+};
+
+export { TYPES, DATE_FORMAT, EVENT_DATE_FORMAT, TIME_FORMAT, FULL_DATE_FORMAT, MAX_CITIES_TO_SHOW, UiBlockerTimeLimit, FLATPICKR_DATE_FORMAT, FilterType, SortType, UserAction, UpdateType, Key };

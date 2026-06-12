@@ -37,7 +37,7 @@ export default class BigTripApiService extends ApiService {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
-      body: JSON.stringify(this.#adaptToServerNew(point)),
+      body: JSON.stringify(this.#adaptToServer(point, false)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
     return ApiService.parseResponse(response);
@@ -50,9 +50,8 @@ export default class BigTripApiService extends ApiService {
     });
   }
 
-  #adaptToServer(point) {
-    return {
-      'id': point.id,
+  #adaptToServer(point, includeId = true) {
+    const adaptedPoint = {
       'base_price': point.basePrice,
       'date_from': point.dateFrom,
       'date_to': point.dateTo,
@@ -61,17 +60,11 @@ export default class BigTripApiService extends ApiService {
       'offers': point.offers,
       'type': point.type,
     };
-  }
 
-  #adaptToServerNew(point) {
-    return {
-      'base_price': point.basePrice,
-      'date_from': point.dateFrom,
-      'date_to': point.dateTo,
-      'destination': point.destination,
-      'is_favorite': point.isFavorite,
-      'offers': point.offers,
-      'type': point.type,
-    };
+    if (includeId) {
+      adaptedPoint['id'] = point.id;
+    }
+
+    return adaptedPoint;
   }
 }

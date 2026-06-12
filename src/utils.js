@@ -2,8 +2,6 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { SortType, DATE_FORMAT, EVENT_DATE_FORMAT, TIME_FORMAT, FilterType } from './const.js';
 
-dayjs.extend(duration);
-
 const capitalizeFirstLetter = (string) => {
   if (!string) {
     return string;
@@ -72,6 +70,12 @@ const generateFilter = (points) => Object.entries(filter).map(([filterType, filt
   count: filterFn(points).length,
 }));
 
+const getOffersByType = (offers, type) => offers.find((offer) => offer.type === type)?.offers ?? [];
+
+const getDestinationById = (destinations, id) => destinations.find((destination) => destination.id === id);
+
+dayjs.extend(duration);
+
 export {
   capitalizeFirstLetter,
   isPointFuture,
@@ -83,5 +87,7 @@ export {
   formatTime,
   formatDuration,
   generateFilter,
+  getOffersByType,
+  getDestinationById,
   filter,
 };

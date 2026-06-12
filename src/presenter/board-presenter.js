@@ -144,14 +144,15 @@ export default class BoardPresenter {
     }
 
     const points = this.points;
-    render(this.#eventListComponent, this.#boardContainer);
 
     if (points.length === 0) {
+      render(this.#eventListComponent, this.#boardContainer);
       this.#renderNoPoints();
       return;
     }
 
     this.#renderSort();
+    render(this.#eventListComponent, this.#boardContainer);
     points.forEach((point) => this.#renderPoint(point));
   }
 
